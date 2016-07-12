@@ -27,8 +27,8 @@ Visit TuxFrw home page and get its latest version at
 Requirements
 ============
 
-- Linux kernel version 2.6.18 (or higher) with NetFilter support;
-- IPTables version 1.3.5 (or higher)
+- Linux kernel version 3.x (or higher) with NetFilter support;
+- IPTables version 1.4.x (or higher)
 
 
 Installation
@@ -63,7 +63,7 @@ on the AUTHORS file, or directly to the principal  maintainer,  Marcelo  Gondim
 Legal Information
 ==================
 
-TuxFrw is released under the GPL. See the COPYING file  for  more  information.
+TuxFrw is released under the GPL. See the LICENSE file  for  more  information.
 
 TuxFrw is free software; you can redistribute it and/or  modify  it  under  the
 terms of the GNU General Public License  as  published  by  the  Free  Software
