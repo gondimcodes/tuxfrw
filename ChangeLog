@@ -1,0 +1,297 @@
+3.02 (2011-03-28)
+
+- Changed RESERVED_NET networks and created SSH_PORT in tuxfrw.conf.
+
+3.01 (2010-08-16)
+
+- Changed the order of some rules.
+
+3.00 (2010-07-05)
+
+- Revisions.
+- Manual translation pt_BR to en_US.
+
+3.00_rc2 (2010-06-24)
+
+- Changes in the structure of TuxFrw.
+- IPv6 support corrections.
+- Bugs corrections.
+- Code optimization.
+
+2.66 (2010-03-10)
+
+- Some modifications in the tf_MANGLE.mod.
+
+2.65 (2009-04-28)
+
+- Correction in module tf_INT-DMZ.mod.
+  Changed rules:
+     $IPTABLES -A INT2EXT -p udp -m multiport --dports 135,137,138,139,445 -j DROP
+     $IPTABLES -A INT2EXT -p tcp -m multiport --dports 135,137,138,139,445
+  for:
+     $IPTABLES -A INT2DMZ -p udp -m multiport --dports 135,137,138,139,445 -j DROP
+     $IPTABLES -A INT2DMZ -p tcp -m multiport --dports 135,137,138,139,445
+  Thanks José Carlos Messias <zehkarlos @ gmail.com> for commenting on this bug.
+
+- Enabled invalid rules again in tf_INPUT.mod and tf_FORWARD.mod.
+
+2.64 (2009-04-07)
+
+- Modifications in tuxfrw.conf and modules for TARPIT support.
+
+2.63 (2009-03-22)
+
+- Modifications in PPPoE rules in tf_MANGLE.mod.
+
+2.63 (2008-11-01)
+
+- Removed old and added new IP Address from IANA table in tuxfrw.conf.
+- Optimization of rules. 
+- New Author e-mail: Marcelo Gondim <gondim@linuxinfo.com.br>
+- New TARPIT support added. Look tuxfrw.conf and the modules.
+
+2.62 (2007-02-04)
+
+- Rule TCPMSS added in tf_MANGLE.mod.
+
+2.61 (2005-08-31)
+
+- Some modifications in the rules. Strong modifications!
+
+2.60 (2005-07-30)
+
+- tf_TOS.mod renamed to tf_MANGLE.mod.
+- New modules tf_VPN-EXT.mod and tf_EXT-VPN.mod for Security Point of
+  Presence intentions.
+- New option for tuxfrw command line: tuxfrw load "module_name" 
+  module_names = INT-EXT, INT-DMZ, INT-VPN, DMZ-..., INPUT,
+                     FORWARD and OUTPUT.
+  Thanks for Andre Ramoni <ramoni@databras.com.br>
+- New Author e-mail: gondim@intnet.com.br
+
+2.59 (2007-07-02)
+
+- tf_KERNEL.mod tunning.
+- Removed of the TuxFrw the IPSEC native support and added it support
+  to PPTP and OpenVPN.
+- Removed the module tf_ATK.mod and its rules incorporated in the modules of
+  INPUT and FORWARD.
+
+2.58 (2004-05-21)
+
+- TuxFrw now supports cbq.init and htb.init directly. The tf_QoS.mod module does not 
+  exist anymore. Please read their documentation and tuxfrw.conf.
+- New KERN_MOD variable on tuxfrw.conf to specify if your kernel accepts modules or not.
+- New parameters on tf_KERNEL.mod to solve Neighbour table overflow problems.
+- Improvements in tf_BASE.mod.
+- Bug fix in install.sh. This not worked with kernels >= 2.6 
+- Support for Proxy and Transparent Proxy. See tuxfrw.conf
+- tfconf.sh is deprecated.
+
+2.57 (2003-12-01)
+
+- Improvements in tf_QoS.mod module and tuxfrw.conf.
+
+2.56 (2003-12-01)
+
+- Checking by Chain when the program is started.
+- Included new configuration of QoS in tuxfrw.conf.
+- QoS prioriting services dns, http, https, smtp, pop, imap and ftp in tf_QoS.mod module.
+Obs.: The QoS was implementated in this version and I would like that any improvement should be
+informed by e-mail: gondim@databras.com.br for future versions.
+
+2.55 (2003-10-31)
+
+- tf_KERNEL.mod modified. New modules.
+- tf_NAT-OUT.mod modified. New rules.
+- Kernel 2.6 support added.
+
+2.54 (2003-05-06)
+
+- tf_KERNEL.mod modified. Variables with incorrect values.
+- Snort_Inline supported. TARGET variable added in tuxfrw.conf.
+
+2.53 (2003.02-14)
+
+- IPSec NAT Traversal (NAT-T) supported.
+- NAT variable in tuxfrw.conf has now the following possible values:
+  NAT="0" - Disabled
+  NAT="1" - POSTROUTING only
+  NAT="2" - PREROUTING and POSTROUTING
+  NAT="3" - PREROUTING only
+- Modules tf_???-???, tf_TOS, tf_INPUT, tf_OUTPUT and tf_FORWARD do not have
+  the function declarations inside them anymore. Now every function is 
+  declared inside the module tf_BASE.mod.
+- Due to the changes above, module tf_NAT.mod has been subdivided in 2 new
+  modules: tf_NAT-IN.mod and tf_NAT-OUT.mod
+- Starting from this version we need at least kernel 2.4.18 to work. [Gondim]
+
+2.52 (2002-10-03)
+
+- Changes in function save_kernel_options and restore_kernel_options.
+  These functions are using sysctl program now. [Ramoni]
+- Bug fix in tfconf.sh. [Isamp]
+- Changes in TuxFrw structure and module names, towards better development
+  and management of the tool. There isn't tf_RULES.mod anymore, and in its 
+  place there are tf_INPUT.mod, tf_OUTPUT.mod and tf_FORWARD.mod. [Gondim]
+
+2.51 (2002-10-01)
+
+- Changes in the mangle rules because it was causing problems with many
+  Internet sites, and we dunno why. Changing TOS to 8 does not appear to
+  cause any trouble. [Gondim]
+
+2.50 (2002-09-30)
+
+- Changes in TuxFrw structure and module names, towards better development
+  and management of the tool.
+- 'tfconf.sh' has been created to help the configuration of 'tuxfrw.conf'.
+- 'install.sh' has been created to help the installation of TuxFrw.
+- More documentation, including the new 'TuxFrw Manual'.
+- Improvements made in base TuxFrw rules.
+- Kernel configuration options now in 'tf_KERNEL.mod'.
+- Correction of bugs related to VPN.
+- Update of IANA reserved IP blocks in the spoofing protection table.
+- REJECT target has been exchanged by DROP, because the first one could cause
+  performance loss in a high traffic network. [Gondim]
+
+2.15 (2002-05-16)
+
+- The command 'tuxfrw status' has been exchanged by 'tuxfrw rules', and now the
+  command 'tuxfrw status' shows information about variables and interfaces.
+- Optimized interface capture code in 'tuxfrw'. Now there's a function called
+  get_interface() and it is used by 'tuxfrw.conf'. Helped by Ramoni. [Gondim]
+
+2.14 (2002-05-01)
+
+- TuxFrw is now easier!!! :) Read the modules...
+- Removed tuxLOG.mod module. It is not needed anymore.
+- Modules tuxVPN-DMZ.mod, tuxDMZ-VPN.mod, tuxVPN-INT.mod and tuxINT-VPN.mod
+  have been created. [Gondim]
+
+2.13
+
+- There were two vulnerabilities found on the last versions that allowed two
+  different ways to attack using spoofing; the first one using as IP source any
+  of the firewall interfaces, and the other one using the broadcast adress as
+  the IP source.
+- 'tuxTRJ.mod' has been removed, because it left slower the firewall startup,
+  process, with not so much benefit.
+- TuxFrw is now installed as default in /etc/tuxfrw, and into this directory
+  it has the directory 'rules' where the rules modules are. [Gondim]
+
+2.12 
+
+- Correction done to the tuxKNL.mod
+
+2.11 (2002-01-07)
+
+- Not too many important changes. Everything we did was to translate all of
+  the package files from brazilian portuguese to english. [MdS]
+
+2.10   
+
+- Source code has not been altered, only the listing of TuxFrw contributors.
+
+2.10p4 
+
+- Credits for previous creators of CFTK, the sotfware which served as base 
+  for TuxFrw.
+
+2.10p3 
+
+- REJECT rules corrected on modules tuxLOG and tuxRULES.
+
+2.10p2 
+
+- BUG FIX: related to TuxFrw module loading when some networks like DMZ did
+  not exist.
+
+2.10p1 
+
+- REJECT rules of tuxLOG and tuxRULES modules have been enhanced.
+
+2.9
+
+- Now TuxFrw does automatic retrieving of IP, broadcast and netmask addresses,
+  based on interface names only.
+
+2.8    
+
+- tuxLOG and tuxRULES modules have been altered to support packet REJECTion
+  instead of DROPing in order to the firewall become more "stealthy". 
+- Addition of tcp_ecn (Explicit Congestion Notification) paramenter to tuxKNL.
+  The two contributions above have been posted by Marcelo de Souza from ACME! 
+  (http://www.acme-ids.org/~marcelo).
+- Andre Luiz <ramoni@linuxinfo.com.br> had contributed with a small change in
+  the 'tuxfrw' file in order to the 'modprobe' and 'iptables' commands be 
+  automatically detected.
+- Heavy changes on files 'trojans' and 'tuxATK.mod' to load the Trojans table
+  fastly. Now the 'trojans' file is merely used as a query source, giving space
+  to the tuxTRJ module.
+
+2.7    
+
+- A function responsible for OUTPUT rules has been added to the tuxRULES
+  module, because some admins use these rules to "close" the firewall even more.
+  When the command 'tuxfrw stop' is calles, TuxFrw will clean all chains but
+  keep NAT rules. [Gondim]
+
+2.6 
+
+- No changes have been done to the source code, only to the some module names
+  in order to easialy recognize its function, e.g. 'tuxaux.mod' --> 'tuxLOG.mod'
+  [Gondim]
+
+2.5 
+
+- In this version I decided to take NAT and TOS functions off tuxRULES module.
+  It can ease the way these things are handled by ISPs. Now we have tuxTOS and 
+  tuxNAT modules. [Gondim]
+
+2.4
+
+- We've received a excellent contribution from R.Carneval enhancing TuxFrw 
+  performance. [Gondim]
+- Now we have TROJAN_CHECK split into two new chains, TROJAN_CHECK_TCP and
+  TROJAN_CHECK_UDP. Some limit matching has been added to log generation on 
+  'tuxaux.mod' file. [Gondim]
+- ICMP spoofing protection. [Gondim]
+
+2.3
+
+- Lines containing tcp-reset have been removed from tuxRULES module, cause 
+  they helped port gathering done by nmap. [Gondim]
+
+2.2 
+
+- Changes done to variables location on 'tuxfrw.conf'. [Gondim]
+- Suport to PigMeat. PigMeat is a tool that blocks atacks in real-time, based
+  on Snort IDS. PigMeat can be downloaded from htp://pigmeat.linuxinfo.com.br
+  [Gondim]
+
+2.1
+
+- Correction done to the installation process where the MODULES variable 
+  pointed to "./", and now points to the value of the variable INSTALLPATH. Due
+  to this error the firewall didn't load up correctly after boot. 
+- Enhancements related to the use of the IP_VPN variable. [Gondim]
+ 
+
+2.0
+
+- Too many changes, cause now TuxFrw is modular. There is a file module to 
+  each specific set of rules.
+- Instalation and Uninstallation through proper commands.
+- Many other source code improvements... [Gondim]
+
+1.1 
+
+- Automatic configuration od /proc parameters.
+- Spoof chacking against IANA reserved address spaces.
+- Flooding protection. [Isamp]
+
+1.0b
+
+- BUG FIX: problem loading TROJANS variable when creating rules. [Gondim]
+

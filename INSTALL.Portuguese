@@ -1,0 +1,24 @@
+
+Instalação do TuxFrw
+====================
+
+Para instalar o TuxFrw, siga estes passos:
+
+1) Execute (como root):
+
+# ./install.sh
+
+Os scripts serão instalados em  /etc/tuxfrw.  O  instalador  tentará  copiar  o 
+script 'tuxfrw' com as devidas permissões em /etc/rc.d/init.d/  e  adicionar  o 
+'tuxfrw' como um serviço do sistema.
+
+2) Configure as variáveis em /etc/tuxfrw/tuxfrw.conf
+
+Com os procedimentos acima, TuxFrw estará pronto para iniciar  automaticamente.
+Isto pode ser desfeito com o programa 'services' ou similar.
+
+Se o script não encontrar 'chkconfig' e o  diretório  /etc/rc.d/init.d/,  todos 
+arquivos serão copiados em /etc/tuxfrw e o 'tuxfrw' em /sbin. 
+
+Leia o README.Portuguese e o "Manual do TuxFrw" para mais informações.
+

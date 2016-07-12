@@ -1,0 +1,541 @@
+===============================================================================
+
+                               TuxFrw Manual
+                              ---------------
+                             
+                               (version 3.00)
+
+===============================================================================
+
+TuxFrw consists on a group of shell scripts which content are firewall  Netfilter/IPTables
+rules and definitions, written in a modular way to make its administration easier.
+The TuxFrw scripts, also called modules, have the structure capable of actuating
+in firewalls that link and protect a corporative environment of up to three sub-networks,
+whichever they are:
+
+- EXT ==> external network or Internet. One of the most vulnerable points for a 
+          corporation to have direct access to the Internet. There are specific
+          TF modules for these accesses that will block some types of attacks 
+          and generate records for posterior audit.
+
+- DMZ ==> semi-protected networks for servers that offer services to the external 
+          network or Internet. They can offer several services, like: HTTP, FTP, 
+          DNS, SMTP, POP3 and others. We say that it is a semi-protected network
+          for offering services to the Internet that can compromise the secutity
+          of the corporation, in case there are security failures in these services.
+          For this reason, all the public services need to be available at the DMZ 
+          and this network can't have access to the company's corporative 
+          network. The TF protects the DMZ network, allowing only accesses to 
+          services that are enabled and defining rules for these accesses.
+          There can be enabled services at the DMZ but that aren't available for
+          the Internet, as the SSH, which is very used for a server's remote maintenance.
+          It's important that the administrator keep his servers always very updated,
+          because as much as they are known, the bigger the probability of them 
+          being attacked.
+
+- INT ==> the client's corporative network. In this network, there can't be access 
+          from the external network or the Internet, although some companies make 
+          that mistake. All of this network's accesses to the Internet and/or the DMZ
+          are controlled by TuxFrw and all the atempts of non-authorized acesses 
+          will be registered.
+
+
+The TuxFrw holds some advanced resources like SPF (Stateful Packet Filtering),
+that controls the status of a connection, reducing, then, the amount of rules
+and making them simpler to manage, besides a higher security, since the firewall
+is in charge of evaluating if an answer is valid or not. Another resource that 
+the TF already holds in its modular structure is the NAT (Network  Address
+Translation), that can be of three types:
+
+- N:1 ==> or traditionally known as "masquerade", allows that several IPs from a
+          sub-network "come out" as an only IP of another sub-network.
+          Some companies uses this resource to reduce the number of IP`s on use,
+          and also to provide more  security to internal network (intranet). On
+          this scenario the corporate network goes to internet using only one IP
+          public.
+
+- 1:1 ==> this resource is very used on a DMZ for allowing that a server don't
+          need a public IP. This way, it's not necessary to subdivide the intervals
+          of public IPs given by the internet service providers, since this would
+          imply on a loss of IPs.
+          This way, we could associate an IP 192.168.0.1 to 200.xxx.0.1 and 
+          vice-versa.
+
+- N:N ==> very little used, this kind of NAT does nothing more than a change in
+          a pool of IPs of a sub-network for another pool of IPs of another sub-network.
+
+Just to inform, the NAT doesn`t exist on IPV6, and I dont know why it
+did not been implemented. The IPV6 concepts, says that any network
+device must be his own IP, without the needed to use NAT.
+
+TuxFrw Structure IPv4:
+======================
+
+
+                                tuxfrw---tuxfrw.conf
+                                  |
+                              tf_BASE.mod
+                                  |
+     +----------------------------+---------+------+------------+-----+
+     |             |              |         |      |            |     |
+ tf_KERNEL.mod     |              |  tf_NAT-IN.mod |            | tf_OUTPUT.mod
+                   |              |                |            |
+              tf_INPUT.mod  tf_FORWARD.mod   tf_NAT-OUT.mod  tf_MANGLE.mod
+                                  |
+   +------------+-------+---------+---------+--------+--------+
+   |            |       |                   |        |        |
+ tf_INT-EXT.mod | tf_INT-VPN.mod      tf_EXT-DMZ.mod |  tf_DMZ-EXT.mod
+                |                                    |
+       +-------+--+------+                 +-------+---+-------+
+       |       |  |      |                 |       |   |       |
+       |       |  |      |                 |       |   |       |
+tf_INT-DMZ.mod |  | tf_DMZ-INT.mod  tf_DMZ-VPN.mod |   | tf_VPN-DMZ.mod
+               |  |                                |   |
+  tf_EXT-INT.mod  tf_EXT-VPN.mod       tf_VPN-EXT.mod tf_VPN-INT.mod
+
+			
+
+TuxFrw Structure IPv6:
+======================
+
+
+                                tuxfrw---tuxfrw.conf
+                                  |
+                              tf_BASE.mod
+                                  |
+     +----------------------------+------------------+-----+
+     |             |              |                  |     |
+ tf_KERNEL.mod     |              |                  | tf_OUTPUT.mod
+                   |              |                  |
+              tf_INPUT.mod  tf_FORWARD.mod      tf_MANGLE.mod
+                                  |
+   +------------+-------+---------+---------+--------+--------+
+   |            |       |                   |        |        |
+ tf_INT-EXT.mod | tf_INT-VPN.mod      tf_EXT-DMZ.mod |  tf_DMZ-EXT.mod
+                |                                    |
+       +-------+--+------+                 +-------+---+-------+
+       |       |  |      |                 |       |   |       |
+       |       |  |      |                 |       |   |       |
+tf_INT-DMZ.mod |  | tf_DMZ-INT.mod  tf_DMZ-VPN.mod |   | tf_VPN-DMZ.mod
+               |  |                                |   |
+  tf_EXT-INT.mod  tf_EXT-VPN.mod       tf_VPN-EXT.mod tf_VPN-INT.mod
+
+
+
+Taking a first look at the TuxFrw structure, we have the impression of something
+confusing, but soon we'll see that, besides practical, it's very simple to manage
+and apply it in an institution.
+The diagram above illustrates which modules are connected, demonstrating that the
+"tuxfrw" file is responsible for the calling of the modules beneath it. Notice that
+in IPv6 there are no modules tf_NAT IN.mod-and-tf_NAT OUT.mod.
+
+
+Description of the programs that the TuxFrw consist on:
+=============================================
+
+- tuxfrw         ==> this is the main program, where we are not used to making
+                     any changes. It is only used to organize the module loading
+                     routines and allow other base function callings, for instance:
+                     start, stop, status,  panic, load and others that might appear.
+                     It is usually installed in /etc/rc.d/init.d, where is configured
+                     to initiate with the system.
+
+- tf_BASE.mod    ==> this module has the definition of the basic functions run
+                     by the main program, for instance the initialization function,
+                     where, from this moment on, will be called other defined 
+                     funtions on the other modules described below.
+                     In this module, the order of the base functions calling is 
+                     organized. In case new modules are created, it will be necessary
+                     to create new function callings in this module.
+
+- tf_KERNEL.mod  ==> this module has the definition for many kernel parameters,
+                     for that to be safer and well-optimized. It's recommended
+                     the reading of this file, because there can be situations 
+                     where some changes are necessary.
+
+- tf_NAT-IN.mod  ==> in this module, all the rules related to the entrance NAT
+                     (PREROUTING).
+
+- tf_NAT-OUT.mod ==> in this module, all the rules related to the outgoing NAT
+                     (OUTPUT e POSTROUTING). OUTPUT when it's used a local NAT.
+
+- tf_MANGLE.mod  ==> This module are done the package marks and modifications.
+
+- tf_INPUT.mod   ==> this module is responsible for the INPUT rules.
+
+- tf_OUTPUT.mod  ==> this module is responsible for the OUTPUT rules.
+
+- tf_FORWARD.mod ==> this module is responsible for the FORWARD rules. Here is kept
+                     a structure to organize the FORWARD rules in specific chains 
+                     and separate them in other modules.
+
+Before introducing the other modules, it's necessary to understand that the rules
+at TuxFrw are directed according to the entrance and exit of packages through the 
+firewall network interfaces. I.e.: rules to permit accesses from the Internet
+to the available services at DMZ, are infact the packages that enter through the
+interface connected to the Internet and exit through the network interface connected
+to the DMZ network. On the contrary, the entrance and the exit invert themselves.
+
+- tf_INT-EXT.mod ==> all the rules that allow the access of the 
+                     internal or corporative network of the client to the external
+                     network or the INternet must be placed in this module.
+                     I.e.: the allow access to HTTP web pages, rules must be placed 
+                     in this module.
+
+- tf_EXT-INT.mod ==> the inverse of the described above. To allow that someone from the
+                     Internet accesses any service inside the internal network, a rule
+                     must be put in this module. Note that the name of the module
+                     already indicates where to put the rules according to the need.
+		     
+- tf_INT-DMZ.mod ==> the same as described above, but between the internal network
+  tf_DMZ-INT.mod     and the DMZ network.
+
+- tf_EXT-DMZ.mod ==> the same as described above, but between the external network
+  tf_DMZ-EXT.mod     (Internet) e the DMZ.
+
+- tf_INT-VPN.mod ==> the TuxFrw has 100% support to VPN  (Virtual Private Network)
+  tf_VPN-INT.mod     using the  OpenVPN   http://openvpn.net     ou    PPTP
+                     http://pptpclient.sourceforge.net.
+	             The principle of functioning is the same as introduced previously,
+                     but between the internal network interfaces and tun+ or ppp+. 
+                     I.e.: from the eth2 interface to tun0 and vice-versa.
+                     To understand more about these modules, it's necessary a study 
+                     on the VPNs.
+
+- tf_DMZ-VPN.mod ==> the same as described above, but between the DMZ and the VPN,
+  tf_VPN-DMZ.mod     VPN and EXT.
+  tf_VPN-EXT.mod     
+  tf_EXT-VPN.mod     
+
+- tuxfrw.conf    ==> this file has the definition of all the variables used by the
+                     TuxFrw. Any new variable created in the file, can be used in 
+                     any module. This facilitates the maintenance, because if you 
+                     only change one variable's amount, the behavior of the TuxFrw
+                     will be changed in all the modules where this variable is being 
+                     used.
+                     Some variables are already defined in this file. The alteration
+                     of their names can cause a mal-function of TuxFrw.
+
+- install.sh	 ==> this shell script only install the TuxFrw in its directories.
+                     All the modules are placed after /etc/tuxfrw/ just like the
+                     tuxfrw.conf. The script TuxFrw is placed in /etc/rc.d/init.d/
+                     in case there is the chkconfig utility, otherwise, it will also
+                     be in /etc/tuxfrw/.
+		     The TuxFrw, in the presence of the chkconfig utility, can behave
+                     as a service to be executed in the system's initialization.
+
+Some important notes:
+================================
+
+In case of access problems, consult the module tf_KERNEL.mod, because there may
+have any parameter that needs alteration.
+
+In case of error occurrence when initiating TuxFrw, as the example below:
+
+=========================================================================
+=== TuxFrw 3.00                                                       ===
+=== Copyright (C) 2001-2010                                           ===
+=== Marcelo Gondim <gondim@linuxinfo.com.br>                          ===
++-----------------------------------------------------------------------+
+| TuxFrw is free software; you can redistribute it and/or modify        |
+| it under the terms of the GNU General Public License as published by  |
+| the Free Software Foundation; either version 2 of the License, or     |
+| (at your option) any later version.                                   |
++-----------------------------------------------------------------------+
+Opening TuxFrw configuration file:                                   [OK]
+Clearing all current rules and user defined chains:                  [OK]
+Changing target policies to DROP:                                    [OK]
+Applying TuxFrw configuration:
+
+Loading MANGLE IPv4                                                  [OK]
+Loading MANGLE IPv6                                                  [OK]
+Loading INPUT IPv4                                                   [FAILED]
+Loading INPUT IPv6                                                   [OK]
+Loading OUTPUT IPv4                                                  [OK]
+Loading OUTPUT IPv6                                                  [OK]
+Loading FORWARD IPv4                                                 [OK]
+Loading FORWARD IPv6                                                 [OK]
+
+
+Use the following technique to evaluate the problem:
+
+# sh -x /etc/init.d/tuxfrw start &> /tmp/error.check
+ou
+# sh -x /sbin/tuxfrw start &> /tmp/error.check
+
+# less /tmp/error.check
+
+This is the DEBUG mode for the shell script, language in which the TuxFrw was created.
+
+Variables created in tuxfrw.conf and sent to the modules with the wrong name can 
+generate errors difficult to be detected, as shown below:
+
+In tuxfrw.conf:
+
+RMT_ADMIN_IP="192.168.1.15"
+
+In tf_INT-EXT.mod:
+
+$IPTABLES -A INT2EXT -s $RMT_IP_ADMIN -j ACCEPT
+
+It will be executed like this:
+
+iptables -A INT2EXT -s   -j ACCEPT
+
+Generating the followinh=g error:
+
+ Bad argument `ACCEPT'
+ Try `iptables -h' or 'iptables --help' for more information.
+
+Note that this rule will never be executed because of this wrong variable!
+
+In case an access is not working, consult your logs. The /var/log/messages is
+usually responsible for this storage, since the TuxFrw records all the improper
+accesses attempts.
+
+Modules that need alteration more frequently:
+=============================================
+
+- tf_INPUT.mod   ==> due to the INPUT rules of the firewall.
+
+- tf_OUTPUT.mod  ==> due to the OUTPUT rules of the firewall.
+
+- tf_NAT-IN.mod  ==> in case the network has an entrance NAT, what normally happens
+                     when there are servers on the DMZ that need to have a public
+                     IP. I.e.: DNS Server, Web Server.
+
+- tf_NAT-OUT.mod ==> It's extremely necessary for the corporative network to access
+                     the Internet with any public IP and also for the servers to
+                     access the Internet with their own IP.
+                     SECURITY: Only give the public IP for the servers 
+                     that will indeed access other public servers.
+                     I.e.: DNS Server, other servers will need, in case your DNS
+                     Server is not located on your DMZ. The security would be for
+                     the simple fact that if any DMZ server is invaded, this not having
+                     access to the Internet and public IP on the exit, it will not be 
+                     able to be used on Internet attacks, without compromising the 
+                     Firewall.
+
+- tf_INT-EXT.mod ==> these are the most altered due to their importance inside the main
+  tf_EXT-INT.mod     chain FORWARD. They control the data flux, existing among the
+  tf_INT-DMZ.mod     Firewall interfaces.
+  tf_DMZ-INT.mod
+  tf_EXT-DMZ.mod
+  tf_DMZ-EXT.mod
+
+- tf_INT-VPN.mod ==> these has as much importance as the above, but only in the cases where
+  tf_VPN-INT.mod     might exist a VPN with the Firewall.
+  tf_DMZ-VPN.mod
+  tf_VPN-DMZ.mod
+  tf_VPN-EXT.mod
+  tf_EXT-VPN.mod
+
+For the administrators that want to add more network interfaces:
+================================================================
+
+It is very simple. The admin has to fill these basic requirements:
+
+- Knowledge about shell script.
+- Knowledge about TCP/IP.
+- Knowledge about the IPTable tools.
+
+Let's say you want to create another network interface on the TuxFrw, because this
+firewall has four network interfaces instead of only three.
+Let's see a practical example, for the creation of the TST network interface:
+
+1 - Edit the /etc/tuxfrw/tuxfrw.conf and create the new network interface:
+
+ TST_IFACE="eth3"
+ TST_IP="192.168.2.1"
+ TST_NET="192.168.2.0/255.255.255.0"
+ TST_BRO="192.168.2.255"
+ TST_IP6=""
+ TST_NET6=""
+
+2 - Let's say you want to create new rules for the internal network and this new network,
+    for both to trade information:
+
+Create in /etc/tuxfrw/ipv4 the following files: tf_INT-TST.mod and tf_TST-INT.mod
+Create in /etc/tuxfrw/ipv6 the following files: tf_INT-TST.mod and tf_TST-INT.mod
+The basic structure of these files is this:
+
+
+
+The module tf_INT-TST.mod to IPv4 must contain these lines:
+===========================================================
+#
+# INT->TST directional chains
+#
+	PUT HERE YOUR RULES FROM THE INT NETWORK TO THE TST NETWORK
+
+# log and reject all the unmatched packets
+$IPTABLES  -A INT2TST -j LOG --log-prefix "FIREWALL: INT->TST! "
+
+
+
+The module tf_INT-TST.mod to IPv6 must contain these lines:
+===========================================================
+#
+# INT->TST directional chains
+#
+
+        PUT HERE YOUR RULES FROM THE INT NETWORK TO THE TST NETWORK
+
+# log and reject all the unmatched packets
+$IP6TABLES -A INT2TST -j LOG --log-prefix "FIREWALL: INT->TST! "
+
+
+
+The module tf_TST-INT.mod to IPv4 must contain these lines:
+===========================================================
+#
+# TST->INT directional chains
+#
+	PUT HERE YOUR RULES FROM THE TST NETWORK TO THE INT NETWORK
+
+# log and reject all the unmatched packets
+$IPTABLES  -A TST2INT -j LOG --log-prefix "FIREWALL: TST->INT! "
+
+
+
+The module tf_TST-INT.mod to IPv6 must contain these lines:
+===========================================================
+#
+# TST->INT directional chains
+#
+
+        PUT HERE YOUR RULES FROM THE TST NETWORK TO THE INT NETWORK
+
+# log and reject all the unmatched packets
+$IP6TABLES -A TST2INT -j LOG --log-prefix "FIREWALL: TST->INT! "
+
+
+
+Notice the change from INT2TST to TST2INT and always the last line is used to
+record the logs of the unathorized access attempts.
+
+3 - It is necessary to do like all the FORWARD data flux between the interfaces
+    of the internal network (INT) and test (TST) pass to these new chains, the
+    INT2TST and the TST2INT.
+    Below the sections of the module tf_FORWARD.mod, where the new FORWARD rules
+    must be placed. IPv6 just do the same but using $IP6TABLES instead. 
+
+  .
+  .
+  .
+
+  # accept the forwardings of the nets
+  if [ "$DMZ_IFACE" != "" ]; then $IPTABLES -A FORWARD -i $DMZ_IFACE -o $DMZ_IFACE -j ACCEPT; fi
+  if [ "$INT_IFACE" != "" ]; then $IPTABLES -A FORWARD -i $INT_IFACE -o $INT_IFACE -j ACCEPT; fi
+  if [ "$EXT_IFACE" != "" ]; then $IPTABLES -A FORWARD -i $EXT_IFACE -o $EXT_IFACE -j ACCEPT; fi
+  if [ "$TST_IFACE" != "" ]; then $IPTABLES -A FORWARD -i $TST_IFACE -o $TST_IFACE -j ACCEPT; fi
+
+  .
+  .
+  .  
+
+  # "link" the available networks together
+  if [ "$INT_IFACE" != "" -a "$DMZ_IFACE" != "" ]; then
+    $IPTABLES -A FORWARD -i $INT_IFACE -o $DMZ_IFACE -j INT2DMZ
+    $IPTABLES -A FORWARD -i $DMZ_IFACE -o $INT_IFACE -j DMZ2INT
+  fi
+
+  if [ "$INT_IFACE" != "" -a "$TST_IFACE" != "" ]; then
+    $IPTABLES -A FORWARD -i $INT_IFACE -o $TST_IFACE -j INT2TST
+    $IPTABLES -A FORWARD -i $TST_IFACE -o $INT_IFACE -j TST2INT
+  fi
+
+  .
+  .
+  .
+
+4 - It is necessary to add these callings inside another function of the module
+    tf_BASE.mod, the function create_rules().
+    Below is the section where the calling must be inserted.
+
+  .
+  .
+  .
+
+  # DMZ<->EXT rules
+  if [ "$DMZ_IFACE" != "" -a "$EXT_IFACE" != "" ]; then
+    $IPTABLES -N DMZ2EXT
+    $IPTABLES -N EXT2DMZ
+    $IP6TABLES -N DMZ2EXT
+    $IP6TABLES -N EXT2DMZ
+    . $CONF_DIR/ipv4/tf_DMZ-EXT.mod 2> /tmp/tf_error
+    echo -n "Loading DMZ->EXT IPv4"
+    evaluate_retval
+    . $CONF_DIR/ipv6/tf_DMZ-EXT.mod 2> /tmp/tf_error
+    echo -n "Loading DMZ->EXT IPv6"
+    evaluate_retval
+    . $CONF_DIR/ipv4/tf_EXT-DMZ.mod 2> /tmp/tf_error
+    echo -n "Loading EXT->DMZ IPv4"
+    evaluate_retval
+    . $CONF_DIR/ipv6/tf_EXT-DMZ.mod 2> /tmp/tf_error
+    echo -n "Loading EXT->DMZ IPv6"
+    evaluate_retval
+  fi
+
+  # INT<->TST rules
+  if [ "$INT_IFACE" != "" -a "$TST_IFACE" != "" ]; then
+    $IPTABLES -N INT2TST
+    $IPTABLES -N TST2INT
+    $IP6TABLES -N INT2TST
+    $IP6TABLES -N TST2INT
+    . $CONF_DIR/ipv4/tf_INT-TST.mod 2> /tmp/tf_error
+    echo -n "Loading INT->TST IPv4"
+    evaluate_retval
+    . $CONF_DIR/ipv6/tf_INT-TST.mod 2> /tmp/tf_error
+    echo -n "Loading INT->TST IPv6"
+    evaluate_retval
+    . $CONF_DIR/ipv4/tf_TST-INT.mod 2> /tmp/tf_error
+    echo -n "Loading TST->INT IPv4"
+    evaluate_retval
+    . $CONF_DIR/ipv6/tf_TST-INT.mod 2> /tmp/tf_error
+    echo -n "Loading TST->INT IPv6"
+    evaluate_retval
+  fi
+								    
+  .
+  .
+  .
+
+  # create forward rules :-)
+  . $CONF_DIR/ipv4/tf_FORWARD.mod 2> /tmp/tf_error
+  echo -n "Loading FORWARD IPv4"
+  evaluate_retval
+  . $CONF_DIR/ipv6/tf_FORWARD.mod 2> /tmp/tf_error
+  echo -n "Loading FORWARD IPv6"
+  evaluate_retval
+
+  .
+  .
+  .
+
+Observation.: Notice that the entry of the block above was placed before the calling 
+              of the FORWARD block and it needs to be this way for 
+              all the new entries of this kind.
+
+Ok! Now you just have to restart the TuxFrw for the new rules to work.
+
+/sbin/tuxfrw start ou /etc/init.d/tuxfrw start
+
+================================================================================
+
+ Autor
+ -----
+ - Marcelo Gondim <gondim@linuxinfo.com.br>
+
+================================================================================
+
+ Links
+ -----
+
+ Página oficial do Netfilter+IPTables:
+ http://www.netfilter.org
+
+ Excelente tutorial sobre IPTables:
+ http://www.frozentux.net/documents/iptables-tutorial/
+
+================================================================================

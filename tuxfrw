@@ -1,0 +1,337 @@
+#!/usr/bin/env bash
+#
+# ----------------------------------------------------------------------------
+# TuxFrw 4.0
+# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# ----------------------------------------------------------------------------
+#
+# tuxfrw - startup script for the TuxFrw firewall automation tool
+#
+# ----------------------------------------------------------------------------
+#
+# This file is part of TuxFrw
+#
+# TuxFrw is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# ----------------------------------------------------------------------------
+
+#################################################################
+# Definindo funcoes:
+COL=70;WCOL=50
+SET_COL="echo -en \\033[${COL}G"
+NORMAL="echo -en \\033[0;39m"
+SUCCESS="echo -en \\033[1;32m"
+FAILURE="echo -en \\033[1;31m"
+
+evaluate_retval() {
+   if [ "`cat /tmp/tf_error`" = "" ]; then
+      print_status success
+   else
+      print_status failure
+   fi
+   rm /tmp/tf_error
+}
+
+print_status() {
+   if [ $# = 0 ]; then
+      echo "Usage: print_status {success|failure}"
+      return 1
+   fi
+   case "$1" in
+           success)
+                   $SET_COL
+                   echo -n "["
+                   $SUCCESS
+                   echo -n "OK"
+                   $NORMAL
+                   echo "]"
+                   ;;
+           failure)
+                   $SET_COL
+                   echo -n "["
+                   $FAILURE
+                   echo -n "FAILED"
+                   $NORMAL
+                   echo "]"
+                   ;;
+   esac
+}
+
+CONF_DIR="/etc/tuxfrw"
+
+#
+# load up configuration files and modules
+#
+load_files()
+{
+  # don't do this if we don't have the config file
+  echo -n "Opening TuxFrw configuration file: "
+  if [ -f $CONF_DIR/tuxfrw.conf ]; then
+    . $CONF_DIR/tuxfrw.conf
+    print_status success
+    # source TuxFrw modules
+    for MODULE in `ls $CONF_DIR/tf_*.mod`; do
+      . $MODULE
+    done
+  else
+    print_status failure
+    exit 1
+  fi
+}
+
+load_chain() {
+  if [ "$1" != "" ]; then
+     if [ "$1" == "NAT-IN" ]; then
+        $IPTABLES -F PREROUTING -t nat
+        $IPTABLES -F OUTPUT -t nat
+        . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv4 ..." 
+	evaluate_retval
+        . $CONF_DIR/ipv6/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv6 ..." 
+	evaluate_retval
+        exit
+     fi
+     if [ "$1" == "NAT-OUT" ]; then
+        $IPTABLES -F POSTROUTING -t nat
+        . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv4 ..." 
+        evaluate_retval
+        . $CONF_DIR/ipv6/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv6 ..." 
+        evaluate_retval
+        exit
+     fi
+     if [ "$1" == "INPUT" -o "$1" == "OUTPUT" ]; then
+        $IPTABLES -F $1
+        $IP6TABLES -F $1
+        . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv4..." 
+	evaluate_retval
+        . $CONF_DIR/ipv6/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv6..." 
+	evaluate_retval
+        exit
+     fi
+     if [ "$1" == "IPSET" ]; then
+        . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv4..." 
+	evaluate_retval
+        . $CONF_DIR/ipv6/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv6..." 
+	evaluate_retval
+        exit
+     fi
+     if [ "$1" == "RAW" ]; then
+        $IPTABLES -F PREROUTING -t raw
+        $IPTABLES -F OUTPUT -t raw 
+        $IP6TABLES -F PREROUTING -t raw
+        $IP6TABLES -F OUTPUT -t raw 
+        . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv4..." 
+	evaluate_retval
+        . $CONF_DIR/ipv6/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv6..." 
+	evaluate_retval
+        exit
+     fi
+     if [ "$1" == "MANGLE" ]; then
+        $IPTABLES -F PREROUTING -t mangle
+        $IPTABLES -F POSTROUTING -t mangle
+        $IPTABLES -F INPUT -t mangle
+        $IPTABLES -F FORWARD -t mangle
+        $IPTABLES -F OUTPUT -t mangle 
+        $IP6TABLES -F PREROUTING -t mangle
+        $IP6TABLES -F POSTROUTING -t mangle
+        $IP6TABLES -F INPUT -t mangle
+        $IP6TABLES -F FORWARD -t mangle
+        $IP6TABLES -F OUTPUT -t mangle 
+        . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv4..." 
+	evaluate_retval
+        . $CONF_DIR/ipv6/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv6..." 
+	evaluate_retval
+        exit
+     fi
+     if [ "$1" == "FORWARD" ]; then
+        $IPTABLES -F $1 
+        $IP6TABLES -F $1 
+        . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv4..." 
+	evaluate_retval
+        . $CONF_DIR/ipv6/tf_$1.mod 2> /tmp/tf_error
+        echo -n "Loading $1 IPv6..." 
+	evaluate_retval
+        exit
+     fi
+     VAR1="`echo $1|cut -d- -f1`"
+     VAR2="`echo $1|cut -d- -f2`"
+     CHAIN="$VAR1"2"$VAR2"
+     $IPTABLES -F $CHAIN &> /dev/null
+     $IP6TABLES -F $CHAIN &> /dev/null
+     . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
+     echo -n "Loading $CHAIN IPv4..." 
+     evaluate_retval
+     . $CONF_DIR/ipv6/tf_$1.mod 2> /tmp/tf_error
+     echo -n "Loading $CHAIN IPv6..." 
+     evaluate_retval
+     exit
+  fi
+  echo
+  echo "Module not found! Ex.: tuxfrw load INT-EXT"
+  exit
+}
+
+start() {
+  # Clear these first, because we might be adding to pre-existing rules
+  clear_rules 2> /tmp/tf_error
+  echo -n "Clearing all current rules and user defined chains: "
+  evaluate_retval
+  apply_drop_policy 2> /tmp/tf_error
+  echo -n "Changing target policies to DROP: "
+  evaluate_retval
+  echo -e "Applying TuxFrw configuration: \n"
+  create_rules
+  touch /var/lock/subsys/tuxfrw &> /dev/null
+}
+
+stop() {
+  clear_rules 2> /tmp/tf_error
+  echo -n "Clearing all current rules and user defined chains: "
+  evaluate_retval
+  apply_accept_policy 2> /tmp/tf_error
+  echo -n "Resetting built-in chains to the default ACCEPT policy: "
+  evaluate_retval
+  echo -e "Restoring kernel options...\n"
+  rm -f /var/lock/subsys/tuxfrw &> /dev/null
+}
+
+natopen() {
+  clear_rules 2> /tmp/tf_error
+  echo -n "Clearing all current rules and user defined chains: "
+  evaluate_retval
+  apply_accept_policy 2> /tmp/tf_error
+  echo -n "Resetting built-in chains to the default ACCEPT policy: "
+  evaluate_retval
+  echo -e "Applying NAT configuration: \n"
+  create_natopen
+  rm -f /var/lock/subsys/tuxfrw &> /dev/null
+}
+
+panic() {
+  apply_drop_policy 2> /tmp/tf_error
+  echo -n $"Changing target policies to DROP: "
+  evaluate_retval
+  clear_rules 2> /tmp/tf_error
+  echo -n "Clearing all current rules and user defined chains: "
+  evaluate_retval
+  rm -f /var/lock/subsys/tuxfrw &> /dev/null
+}
+
+header() {
+  echo "========================================================================="
+  echo "=== TuxFrw 4.0                                                        ==="
+  echo "=== Copyright (C) 2001-2016                                           ===" 
+  echo "=== Marcelo Gondim <gondim@linuxinfo.com.br>                          ===" 
+  echo "+-----------------------------------------------------------------------+"
+  echo "| TuxFrw is free software; you can redistribute it and/or modify        |"
+  echo "| it under the terms of the GNU General Public License as published by  |"
+  echo "| the Free Software Foundation; either version 2 of the License, or     |"
+  echo "| (at your option) any later version.                                   |"
+  echo "+-----------------------------------------------------------------------+"
+}
+
+# See how we were called.
+case "$1" in
+  start)
+    header
+    load_files
+    start
+    ;;
+  stop)
+    header
+    load_files
+    stop
+    ;;
+  load)
+    header
+    load_files
+    load_chain $2
+    ;;
+  natopen)
+    header
+    load_files
+    natopen
+    ;;
+  status)
+    header
+    load_files
+    echo
+    echo "Listing 'filter' IPv4 table:"
+    echo "----------------------------"
+    list_filter
+    echo
+    echo "Listing 'nat' IPv4 table:"
+    echo "-------------------------"
+    list_nat
+    echo
+    echo "Listing 'mangle' IPv4 table:"
+    echo "----------------------------"
+    list_mangle
+    echo
+    echo "Listing 'raw' IPv4 table:"
+    echo "----------------------------"
+    list_raw
+    echo
+    ;;
+  status6)
+    header
+    load_files
+    echo
+    echo "Listing 'filter' IPv6 table:"
+    echo "----------------------------"
+    list_filter6
+    echo
+    echo "Listing 'nat' IPv6 table:"
+    echo "-------------------------"
+    list_nat6
+    echo
+    echo "Listing 'mangle' IPv6 table:"
+    echo "----------------------------"
+    list_mangle6
+    echo
+    echo "Listing 'raw' IPv6 table:"
+    echo "----------------------------"
+    list_raw6
+    echo
+    ;;
+  restart)
+    header
+    load_files
+    if [ -f /var/lock/subsys/tuxfrw ]; then
+      stop
+    fi
+    start
+    ;;
+  panic)
+    header
+    load_files
+    panic
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|load|natopen|status|status6|restart|panic}"
+    exit 1
+esac

@@ -1,0 +1,36 @@
+Acknowledgments
+===============
+
+This project is based on CFTK by Conectiva.
+
+CFTK was originally created by:
+
+- Jefferson Luiz Brindarolli <jefferson@conectiva.com> and
+- Fabio R. Schmidlin <frs@conectiva.com.br> for kernels 2.2 (ipchains)
+- Modified to kernel 2.4 by André Ruiz <andre@conectiva.com.br> based on 
+previous work from Harald Welte <laforge@conectiva.com.br>, Leonardo Marques 
+de Souza <leo@conectiva.com.br>, Andreas Hasenack <andreas@conectiva.com.br>
+
+Extras:
+
+- Some rules of version 2.62 had been copied of the Shorewall.
+  http://www.shorewall.net
+
+- Juliano Primavesi ( Syn Flood Protection Rules ).
+	
+TuxFrw Contributors - TuxFrw 2.x
+================================
+
+- Marcelo de Souza <marcelo@acme-ids.org>
+- Isamp <isamp@terra.com.br>
+- Andre Luiz <ramoni@databras.com.br>
+- Luiz Uhlig <luhlig@databras.com.br>
+- R.Carneval <karneval@osite.com.br>
+
+TuxFrw Contributors - TuxFrw 3.x
+================================
+
+- Glaucius Djalma Pereira Junior <glaucius@gmail.com>
+
+Did I forget to give you credit? Drop me a line at <gondim@linuxinfo.com.br>
+

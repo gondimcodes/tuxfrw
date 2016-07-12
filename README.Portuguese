@@ -1,0 +1,111 @@
+===============================================================================
+
+ 				   TuxFrw
+				   ------
+
+	  A ferramenta definitiva para automação de firewalls Linux.
+
+===============================================================================
+
+TuxFrw é uma ferramenta completa de  automação  de  firewalls  para  GNU/Linux.
+
+Atualmente, TuxFrw consiste de 'scripts' criados para  facilitar  a  forma  com
+que regras de firewall IPTables  são  configuradas.  Com o  TuxFrw,  um usuário
+pode configurar seu próprio firewall baseado em  Linux / Netfilter,  fornecendo
+simplesmente os endereços IP e outras  políticas  de  utilização  de  serviços.
+Comece com um firewall básico, e ajuste-o usando suas habilidades  aliadas  com
+a força da modularidade do TuxFrw. TuxFrw é a ferramenta de  firewalls  baseada
+em IPTables definitiva,  levando  total  vantagem  desta  grande  estrutura  de
+firewalls Linux.
+
+Embora sua funcionalidade não seja tão abrangente, nossa intenção é melhorar  o
+TuxFrw de forma a transformá-lo em uma ferramenta completa de  configuração  de
+firewalls.
+
+Visite a home page do TuxFrw e pegue a última versão em
+ <http://tuxfrw.linuxinfo.com.br/>
+
+
+Requisitos
+==========
+
+- Linux kernel 2.6.18 (ou posterior) com suporte a NetFilter;
+- IPTables 1.3.5 (ou posterior)
+
+
+Instalação
+==========
+
+Leia o arquivo INSTALL.Portuguese para obter instruções de instalação.
+
+
+Utilização
+==========
+
+Leia o "Manual do TuxFrw" para obter ajuda com o TuxFrw.
+
+
+Autores
+=======
+
+	"The TuxFrw Team"
+        -----------------
+	- Marcelo Gondim <gondim@linuxinfo.com.br>
+        - outros contribuidores (listados no arquivo CREDITS).
+
+
+Contato
+=======
+
+Envie relatórios  de  bugs,  patches,  pedidos  de  novas  características,  ou
+qualquer coisa do  tipo  para  os  autores  listados  no  arquivo  AUTHORS,  ou
+diretamente para o mantenedor principal, Marcelo Gondim 
+<gondim@linuxinfo.com.br>.
+
+
+Informações Legais
+==================
+
+TuxFrw foi lançado de acordo com os termos  da  licença  GPL.  Veja  o  arquivo 
+COPYING para mais informações.
+
+TuxFrw é software livre; você pode redistribuí-lo e/ou  modificá-lo  de  acordo
+com os termos  da  Licensa  Pública  GNU  como  publicada  pela  Free  Software
+Foundation; versão 2 da Licensa, ou  (conforme  sua  escolha)  qualquer  versão
+mais nova.
+
+TuxFrw é distribuído com o intuito de ser  útil,  mas  SEM  QUALQUER  GARANTIA;
+nem mesmo a garantia implícita  de  MERCHANTABILITY  ou  FITNESS  PARA  UM  FIM
+PARTICULAR. (Basicamente, se você for "hackeado", não venha chorar  para  nós.)
+Veja a Licensa Pública Geral GNU para mais detalhes.
+
+Você deveria ter recebido uma cópia do Licensa  Pública  Geral  GNU  juntamente
+com o TuxFrw; se não, escreva para :
+
+Free Software Foundation, Inc.,
+59 Temple Place, Suite 330, Boston, MA
+02111-1307
+USA
+
+
+Algumas considerações finais
+============================
+
+Este projeto é recomendado para  qualquer  um  que  tenha  conhecimento  básico
+sobre redes, TCP/IP, filtro de pactoes, IPTables e  também  algum  conhecimento
+adicional sobre administração de sistemas Linux. Ele poderá ser de muita  valia
+para estudantes de áreas relacionadas com segurança da informação em  redes  de
+computadores.
+
+---
+
+Ficaremos felizes se você gostou  deste  projeto,  ainda  mais  se  você  puder
+ajudar-nos em  seu  desenvolvimento  e  melhoria,  com  qualquer  contribuição. 
+Bug-fixes e sugestões para novas versões do  TuxFrw  podem  ser  enviadas  para
+qualquer das pessoas listadas no arquivo AUTHORS.
+
+Obrigado pela sua atenção!
+
+	-- The TuxFrw Team
+
+
