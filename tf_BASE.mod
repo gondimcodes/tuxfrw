@@ -57,6 +57,24 @@ clear_rules()
 }
 
 #
+# Initialize IPSet list
+#
+reset_ipset_list()
+{
+   if ipset list bogons_v4 &>/dev/null; then
+      ipset flush bogons_v4
+      ipset destroy bogons_v4 &> /dev/null
+   fi
+   ipset create bogons_v4 hash:net family inet comment &> /dev/null
+
+   if ipset list bogons_v6 &>/dev/null; then
+      ipset flush bogons_v6
+      ipset destroy bogons_v6 &> /dev/null
+   fi 
+   ipset create bogons_v6 hash:net family inet6 comment &> /dev/null
+}
+
+#
 # Set firewall to default ACCEPT policy
 #
 apply_accept_policy()
