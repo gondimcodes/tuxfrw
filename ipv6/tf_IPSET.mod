@@ -25,10 +25,6 @@
 #
 # ----------------------------------------------------------------------------
 
-if ipset list bogons_v6 &>/dev/null; then
-   ipset flush bogons_v6
-   ipset destroy bogons_v6
-fi
-ipset create bogons_v6 hash:net family inet6 comment
+# Please create list in tf_BASE.mod
 
 ipset add bogons_v6 2001:db8::/32 comment "BOGONS"
