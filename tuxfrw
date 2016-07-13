@@ -327,7 +327,7 @@ case "$1" in
     list_mangle6
     echo
     echo "Listing 'raw' IPv6 table:"
-    echo "----------------------------"
+    echo "-------------------------"
     list_raw6
     echo
     ;;
