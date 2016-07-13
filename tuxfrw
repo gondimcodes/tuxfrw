@@ -306,7 +306,7 @@ case "$1" in
     list_mangle
     echo
     echo "Listing 'raw' IPv4 table:"
-    echo "----------------------------"
+    echo "-------------------------"
     list_raw
     echo
     ;;
