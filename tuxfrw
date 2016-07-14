@@ -126,6 +126,7 @@ load_chain() {
         exit
      fi
      if [ "$1" == "IPSET" ]; then
+        reset_ipset_list
         . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
         echo -n "Loading $1 IPv4..." 
 	evaluate_retval
@@ -281,9 +282,7 @@ case "$1" in
   load)
     header
     load_files
-    reset_ipset_list
     load_chain $2
-    load_chain IPSET
     ;;
   natopen)
     header
