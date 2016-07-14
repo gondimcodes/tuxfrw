@@ -283,6 +283,7 @@ case "$1" in
     load_files
     reset_ipset_list
     load_chain $2
+    load_chain IPSET
     ;;
   natopen)
     header
