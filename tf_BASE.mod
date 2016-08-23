@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.0
+# TuxFrw 4.1
 # Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
@@ -402,13 +402,17 @@ create_rules()
      fi
   fi
 
-  # create forward rules :-)
-  . $CONF_DIR/ipv4/tf_FORWARD.mod 2> /tmp/tf_error
-  echo -n "Loading FORWARD IPv4"
-  evaluate_retval
-  . $CONF_DIR/ipv6/tf_FORWARD.mod 2> /tmp/tf_error
-  echo -n "Loading FORWARD IPv6"
-  evaluate_retval
+  if [ "$EXT_IFACE" != "" ]; then
+     if [ "$INT_IFACE" != "" -o "$DMZ_IFACE" != "" ]; then
+        # create forward rules :-)
+        . $CONF_DIR/ipv4/tf_FORWARD.mod 2> /tmp/tf_error
+        echo -n "Loading FORWARD IPv4"
+        evaluate_retval
+        . $CONF_DIR/ipv6/tf_FORWARD.mod 2> /tmp/tf_error
+        echo -n "Loading FORWARD IPv6"
+        evaluate_retval
+     fi
+  fi
 }
 
 #

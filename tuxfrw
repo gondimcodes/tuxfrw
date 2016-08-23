@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # ----------------------------------------------------------------------------
-# TuxFrw 4.0
+# TuxFrw 4.1
 # Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
@@ -168,14 +168,19 @@ load_chain() {
         exit
      fi
      if [ "$1" == "FORWARD" ]; then
-        $IPTABLES -F $1 
-        $IP6TABLES -F $1 
-        . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
-        echo -n "Loading $1 IPv4..." 
-	evaluate_retval
-        . $CONF_DIR/ipv6/tf_$1.mod 2> /tmp/tf_error
-        echo -n "Loading $1 IPv6..." 
-	evaluate_retval
+        if [ "$EXT_IFACE" != "" ]; then
+           if [ "$INT_IFACE" != "" -o "$DMZ_IFACE" != "" ]; then
+              $IPTABLES -F $1 
+              $IP6TABLES -F $1 
+              . $CONF_DIR/ipv4/tf_$1.mod 2> /tmp/tf_error
+              echo -n "Loading $1 IPv4..." 
+	      evaluate_retval
+              . $CONF_DIR/ipv6/tf_$1.mod 2> /tmp/tf_error
+              echo -n "Loading $1 IPv6..." 
+	      evaluate_retval
+              exit
+           fi
+        fi
         exit
      fi
      VAR1="`echo $1|cut -d- -f1`"
@@ -256,7 +261,7 @@ panic() {
 
 header() {
   echo "========================================================================="
-  echo "=== TuxFrw 4.0                                                        ==="
+  echo "=== TuxFrw 4.1                                                        ==="
   echo "=== Copyright (C) 2001-2016                                           ===" 
   echo "=== Marcelo Gondim <gondim@linuxinfo.com.br>                          ===" 
   echo "+-----------------------------------------------------------------------+"
