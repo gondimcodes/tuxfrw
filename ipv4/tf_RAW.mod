@@ -30,9 +30,6 @@
 if [ "$RMT_ADMIN_IP" != "" ]; then
    $IPTABLES -t raw -A PREROUTING -s $RMT_ADMIN_IP -p tcp -m tcp --syn --dport $SSH_PORT -j CT --notrack
 fi
-if [ "$PROXY_PORT" != "" -a "$INT_IFACE" != "" ]; then
-   $IPTABLES -t raw -A PREROUTING -p tcp -m tcp --syn --dport $PROXY_PORT -i $INT_IFACE -j CT --notrack
-fi
 if [ "$OpenVPN_IP" != "" -a "$OpenVPN_PORT" != "" ]; then
    $IPTABLES -t raw -A PREROUTING -s $OpenVPN_IP -p tcp -m tcp --syn --dport $OpenVPN_PORT -j CT --notrack
 fi

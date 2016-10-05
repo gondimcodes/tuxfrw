@@ -54,7 +54,7 @@ $IPTABLES -A INPUT -p icmp --icmp-type echo-request         -j ACCEPT
 
 # Proxy access - authorization
 if [ "$PROXY_PORT" != "" -a "$INT_IFACE" != "" ]; then
-   $IPTABLES -A INPUT -p tcp -m tcp --dport $PROXY_PORT -m conntrack --ctstate INVALID,UNTRACKED -i $INT_IFACE -j SYNPROXY --sack-perm --timestamp --wscale 7 --mss 1460
+   $IPTABLES -A INPUT -p tcp -m tcp --dport $PROXY_PORT -i $INT_IFACE -j ACCEPT
 fi
 
 # accept OpenVPN between this firewall and another
