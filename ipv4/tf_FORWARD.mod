@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.1
+# TuxFrw 4.2
 # Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
@@ -30,7 +30,9 @@
 #
 
 # accept forward packets with allowed state
-$IPTABLES -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+$IPTABLES -A FORWARD -m state --state ESTABLISHED -j ACCEPT
+# uncomment this line for RELATED helper if you need ftp in FORWARD.
+#$IPTABLES -A FORWARD -m conntrack --ctstate RELATED -m helper --helper ftp -p tcp --dport 1024: -j ACCEPT
 
 # ICMP rules
 #$IPTABLES -A FORWARD -p icmp -j ACCEPT

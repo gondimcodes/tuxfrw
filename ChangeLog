@@ -1,3 +1,7 @@
+4.2 (2016-12-19)
+
+- Introduced new RELATED helper. Look in tf_INPUT.mod, tf_FORWARD.mod and tf_OUTPUT.mod.
+
 4.1 (2016-08-23)
 
 - Fixed loading FORWARD when exist only one network interface configured in tuxfrw.conf. 

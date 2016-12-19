@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.1
+# TuxFrw 4.2
 # Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
@@ -137,5 +137,6 @@ set_sysctl()
   $SYSCTL net.ipv4.conf.all.send_redirects=0
   $SYSCTL net.ipv4.conf.all.accept_source_route=0
   $SYSCTL net.ipv4.conf.all.rp_filter=1
+  $SYSCTL net.netfilter.nf_conntrack_helper=1
 
 }

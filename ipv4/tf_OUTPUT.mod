@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.1
+# TuxFrw 4.2
 # Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
@@ -30,7 +30,9 @@
 #
 
 # accept output packets with allowed state
-$IPTABLES -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+$IPTABLES -A OUTPUT -m state --state ESTABLISHED -j ACCEPT
+# uncomment this line for RELATED helper if you need ftp in OUTPUT.
+#$IPTABLES -A OUTPUT -m conntrack --ctstate RELATED -m helper --helper ftp -p tcp --dport 1024: -j ACCEPT
 
 # accept output packets from LO_IFACE
 $IPTABLES -A OUTPUT -o $LO_IFACE -j ACCEPT
