@@ -39,7 +39,7 @@ $IPTABLES -A INPUT -i $LO_IFACE -j ACCEPT
 
 # accept SSH input from remote administrator IP
 if [ "$RMT_ADMIN_IP" != "" ]; then
-   $IPTABLES -A INPUT -p tcp -m tcp -s $RMT_ADMIN_IP --dport $SSH_PORT -m conntrack --ctstate INVALID,UNTRACKED -j SYNPROXY --sack-perm --timestamp --wscale 7 --mss 1460
+   $IPTABLES -A INPUT -p tcp -m tcp -s $RMT_ADMIN_IP --dport $SSH_PORT -j ACCEPT
 fi
 
 # ICMP rules

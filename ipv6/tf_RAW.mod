@@ -27,9 +27,6 @@
 
 
 # SYNPROXY
-if [ "$RMT_ADMIN_IP6" != "" ]; then
-   $IP6TABLES -t raw -A PREROUTING -s $RMT_ADMIN_IP6 -p tcp -m tcp --syn --dport $SSH_PORT -j CT --notrack
-fi
 if [ "$PROXY_PORT" != "" -a "$INT_IFACE" != "" ]; then
    $IP6TABLES -t raw -A PREROUTING -p tcp -m tcp --syn --dport $PROXY_PORT -i $INT_IFACE -j CT --notrack
 fi
