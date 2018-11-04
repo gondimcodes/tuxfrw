@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_MANGLE.mod - TuxFrw MANGLE rules module
@@ -40,7 +40,6 @@ $IPTABLES -t mangle -A PREROUTING -p tcp -m conntrack --ctstate NEW -m tcpmss ! 
 $IPTABLES -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
 $IPTABLES -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
 $IPTABLES -t mangle -A PREROUTING -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
-$IPTABLES -t mangle -A PREROUTING -p tcp --tcp-flags SYN,FIN SYN,FIN -j DROP
 $IPTABLES -t mangle -A PREROUTING -p tcp --tcp-flags FIN,RST FIN,RST -j DROP
 $IPTABLES -t mangle -A PREROUTING -p tcp --tcp-flags FIN,ACK FIN -j DROP
 $IPTABLES -t mangle -A PREROUTING -p tcp --tcp-flags ACK,URG URG -j DROP
@@ -56,10 +55,6 @@ if [ "$EXT_IFACE" != "" ]; then $IPTABLES -t mangle -A PREROUTING -m set --match
 $IPTABLES -t mangle -A PREROUTING -s 127.0.0.0/8 ! -i $LO_IFACE -j DROP
 
 $IPTABLES -t mangle -A PREROUTING -f -j DROP
-
-# Block SSDP
-$IPTABLES -t mangle -A PREROUTING -p udp --sport 1900 -j DROP
-$IPTABLES -t mangle -A PREROUTING -p udp --dport 1900 -j DROP
 
 # SPOOF_CHECK packets
 if [ "$EXT_IFACE" != "" -a "$EXT_IP"  != "" ]; then $IPTABLES -t mangle -A PREROUTING -s $EXT_IP  -j DROP; fi

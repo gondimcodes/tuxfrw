@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_EXT-INT.mod - TuxFrw EXT->INT rules module
@@ -29,4 +29,4 @@
 #
 
 # log and reject all the unmatched packets
-$IPTABLES -A EXT2INT -m limit --limit 1/m --limit-burst 5 -j LOG --log-prefix "tuxfrw: EXT->INT! "
+#$IPTABLES -A EXT2INT -m limit --limit 1/m --limit-burst 5 -j LOG --log-prefix "tuxfrw: EXT->INT! "

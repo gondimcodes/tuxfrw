@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_INT-EXT.mod - TuxFrw INT->EXT rules module
@@ -28,8 +28,9 @@
 # INT->EXT directional chains
 #
 
+$IP6TABLES -A INT2EXT -m conntrack --ctstate RELATED -m helper --helper ftp -p tcp --dport 1024: -j ACCEPT
 $IP6TABLES -A INT2EXT -p tcp -m multiport --dports 80,443,21,25,110,53 -j ACCEPT
 $IP6TABLES -A INT2EXT -p udp --dport 53  -j ACCEPT
 
 # log and reject all the unmatched packets
-$IP6TABLES -A INT2EXT -j LOG --log-prefix "tuxfrw: INT->EXT! "
+#$IP6TABLES -A INT2EXT -j LOG --log-prefix "tuxfrw: INT->EXT! "

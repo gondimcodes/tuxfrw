@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_IPSET.mod - TuxFrw IPSET rules module
@@ -29,7 +29,9 @@
 
 ipset add bogons_v4 0.0.0.0/8 comment "BOGONS"
 ipset add bogons_v4 10.0.0.0/8 comment "BOGONS"
-ipset add bogons_v4 127.0.0.0/8 comment "BOGONS"
 ipset add bogons_v4 172.16.0.0/12 comment "BOGONS"
 ipset add bogons_v4 192.168.0.0/16 comment "BOGONS"
 ipset add bogons_v4 224.0.0.0/3 comment "BOGONS"
+ipset add bogons_v4 169.254.0.0/16 comment "BOGONS"
+ipset add bogons_v4 192.0.2.0/24 comment "BOGONS"
+ipset add bogons_v4 240.0.0.0/5 comment "BOGONS"

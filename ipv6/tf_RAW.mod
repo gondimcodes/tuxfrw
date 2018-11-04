@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_RAW.mod - TuxFrw RAW rules module
@@ -27,6 +27,9 @@
 
 
 # SYNPROXY
+if [ "$RMT_ADMIN_IP6" != "" ]; then
+   $IP6TABLES -t raw -A PREROUTING -s $RMT_ADMIN_IP6 -p tcp -m tcp --syn --dport $SSH_PORT -j CT --notrack
+fi
 if [ "$PROXY_PORT" != "" -a "$INT_IFACE" != "" ]; then
    $IP6TABLES -t raw -A PREROUTING -p tcp -m tcp --syn --dport $PROXY_PORT -i $INT_IFACE -j CT --notrack
 fi
@@ -34,5 +37,8 @@ if [ "$OpenVPN_IP6" != "" -a "$OpenVPN_PORT" != "" ]; then
    $IP6TABLES -t raw -A PREROUTING -s $OpenVPN_IP6 -p tcp -m tcp --syn --dport $OpenVPN_PORT -j CT --notrack
 fi
 if [ "$PPTP_IP6" != "" ]; then
-   $IP6TABLES -t raw -A PREROUTING -s $PPTP_IP6 -p tcp -m tcp --syn --dport 1723 -j CT --notrack
+   $IP6TABLES -t raw -A PREROUTING -s $PPTP_IP6 -p tcp -m tcp --dport 1723 -j CT --helper pptp
 fi
+
+# helper ftp
+#$IP6TABLES -t raw -A PREROUTING -p tcp --dport 21 -j CT --helper ftp

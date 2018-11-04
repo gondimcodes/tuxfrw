@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_RAW.mod - TuxFrw RAW rules module
@@ -27,11 +27,15 @@
 
 
 # SYNPROXY
+if [ "$RMT_ADMIN_IP" != "" ]; then
+   $IPTABLES -t raw -A PREROUTING -s $RMT_ADMIN_IP -p tcp -m tcp --syn --dport $SSH_PORT -j CT --notrack
+fi
 if [ "$OpenVPN_IP" != "" -a "$OpenVPN_PORT" != "" ]; then
    $IPTABLES -t raw -A PREROUTING -s $OpenVPN_IP -p tcp -m tcp --syn --dport $OpenVPN_PORT -j CT --notrack
 fi
 if [ "$PPTP_IP" != "" ]; then
-   $IPTABLES -t raw -A PREROUTING -s $PPTP_IP -p tcp -m tcp --syn --dport 1723 -j CT --notrack
+   $IPTABLES -t raw -A PREROUTING -s $PPTP_IP -p tcp -m tcp --dport 1723 -j CT --helper pptp
 fi
   
-
+# helper ftp
+#$IPTABLES -t raw -A PREROUTING -p tcp --dport 21 -j CT --helper ftp

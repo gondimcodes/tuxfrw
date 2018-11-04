@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # install.sh - TuxFrw installation script
@@ -36,8 +36,8 @@ CONF_DIR="/etc/tuxfrw"
 echo
 echo "------------------------------------------------------------------------------------"
 echo "#                                                                                  #"
-echo "# TuxFrw 4.2                                                                       #"
-echo "# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)         #"
+echo "# TuxFrw 4.4                                                                       #"
+echo "# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)         #"
 echo "#                                                                                  #"
 echo "------------------------------------------------------------------------------------"
 echo

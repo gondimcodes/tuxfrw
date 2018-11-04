@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_DMZ-EXT.mod - TuxFrw DMZ->EXT rules module
@@ -35,4 +35,4 @@ $IP6TABLES -A DMZ2EXT -p tcp -s $IP6_DNS2 --dport 53 -j ACCEPT
 $IP6TABLES -A DMZ2EXT -p tcp -s $IP6_SMTP --dport 25 -j ACCEPT
 
 # log and reject all the unmatched packets
-$IP6TABLES -A DMZ2EXT -j LOG --log-prefix "tuxfrw: DMZ->EXT! "
+#$IP6TABLES -A DMZ2EXT -j LOG --log-prefix "tuxfrw: DMZ->EXT! "

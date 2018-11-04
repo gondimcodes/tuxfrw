@@ -1,3 +1,7 @@
+4.4 (2018-11-04)
+
+- New improvements.
+
 4.2 (2016-12-19)
 
 - Introduced new RELATED helper. Look in tf_INPUT.mod, tf_FORWARD.mod and tf_OUTPUT.mod.

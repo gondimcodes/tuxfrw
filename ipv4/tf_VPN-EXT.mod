@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_VPN-EXT.mod - TuxFrw VPN->EXT rules module
@@ -29,4 +29,4 @@
 #
 
 # log and reject all the unmatched packets
-$IPTABLES -A VPN2EXT -j LOG --log-prefix "tuxfrw: VPN->EXT! "
+#$IPTABLES -A VPN2EXT -j LOG --log-prefix "tuxfrw: VPN->EXT! "

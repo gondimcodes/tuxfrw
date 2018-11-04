@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_OUTPUT.mod - TuxFrw main rules module
@@ -67,4 +67,4 @@ $IPTABLES -A OUTPUT -p icmp --icmp-type echo-request               -j ACCEPT
 
 #==============================================================================
 # reject all the unmatched packets (won't work if output is totally accepted)
-$IPTABLES -A OUTPUT -m limit --limit 1/m --limit-burst 5 -j LOG --log-prefix "tuxfrw: OUTPUT! "
+#$IPTABLES -A OUTPUT -m limit --limit 1/m --limit-burst 5 -j LOG --log-prefix "tuxfrw: OUTPUT! "

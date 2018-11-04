@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_INPUT.mod - TuxFrw main rules module
@@ -37,9 +37,12 @@ $IP6TABLES -A INPUT -m state --state ESTABLISHED -j ACCEPT
 # accept input packets from LO_IFACE
 $IP6TABLES -A INPUT -i $LO_IFACE -j ACCEPT
 
+# accept link local address
+$IP6TABLES -A INPUT -s fe80::/10 -j ACCEPT
+
 # accept SSH input from remote administrator IP
 if [ "$RMT_ADMIN_IP6" != "" ]; then
-   $IP6TABLES -A INPUT -p tcp -m tcp -s $RMT_ADMIN_IP6 --dport $SSH_PORT -j ACCEPT
+   $IP6TABLES -A INPUT -p tcp -m tcp -s $RMT_ADMIN_IP6 --dport $SSH_PORT -m conntrack --ctstate INVALID,UNTRACKED -j SYNPROXY --sack-perm --timestamp --wscale 7 --mss 1460
 fi
 
 # ICMPv6 rules
@@ -89,7 +92,7 @@ fi
 # accept VPN between this firewall and another (using PPTP)
 if [ "$PPTP_IP6" != "" ]; then
    $IP6TABLES -A INPUT -p 47  -s $PPTP_IP6 -j ACCEPT
-   $IP6TABLES -A INPUT -p tcp -m tcp --dport 1723 -s $PPTP_IP6 -m conntrack --ctstate INVALID,UNTRACKED -j SYNPROXY --sack-perm --timestamp --wscale 7 --mss 1460
+   $IP6TABLES -A INPUT -m conntrack --ctstate ESTABLISHED -m helper --helper pptp -s $PPTP_IP6 -p tcp --dport 1723 -j ACCEPT
 fi
 #==============================================================================
 # Place your rules below
@@ -108,4 +111,4 @@ fi
 $IP6TABLES -A INPUT -m conntrack --ctstate INVALID -j DROP
 
 # reject all the unmatched packets. Insert your rules above this line.
-$IP6TABLES -A INPUT -m limit --limit 1/m --limit-burst 5 -j LOG --log-prefix "tuxfrw: INPUT! "
+#$IP6TABLES -A INPUT -m limit --limit 1/m --limit-burst 5 -j LOG --log-prefix "tuxfrw: INPUT! "

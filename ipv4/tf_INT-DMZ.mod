@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_INT-DMZ.mod - TuxFrw INT->DMZ rules module
@@ -36,4 +36,4 @@ $IPTABLES -A INT2DMZ -p tcp -d $IP_SMTP -m multiport --dports 25,110 -j ACCEPT
 $IPTABLES -A INT2DMZ -p tcp -d $IP_WWW1 -m multiport --dports 80,443 -j ACCEPT
 
 # log and reject all the unmatched packets
-$IPTABLES -A INT2DMZ -j LOG --log-prefix "tuxfrw: INT->DMZ! "
+#$IPTABLES -A INT2DMZ -j LOG --log-prefix "tuxfrw: INT->DMZ! "

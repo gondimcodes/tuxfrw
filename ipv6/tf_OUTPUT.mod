@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_OUTPUT.mod - TuxFrw main rules module
@@ -36,6 +36,9 @@ $IP6TABLES -A OUTPUT -m state --state ESTABLISHED -j ACCEPT
 
 # accept output packets from LO_IFACE
 $IP6TABLES -A OUTPUT -o $LO_IFACE -j ACCEPT
+
+# accept link local address
+$IP6TABLES -A OUTPUT -d fe80::/10 -j ACCEPT
 
 # accept unmatched OUTPUT packets
 # - To enhance security, comment out this line after tests.
@@ -85,4 +88,4 @@ $IP6TABLES -A OUTPUT -p icmpv6 --icmpv6-type 147 -j ACCEPT
 
 #==============================================================================
 # reject all the unmatched packets (won't work if output is totally accepted)
-$IP6TABLES -A OUTPUT -m limit --limit 1/m --limit-burst 5 -j LOG --log-prefix "tuxfrw: OUTPUT! "
+#$IP6TABLES -A OUTPUT -m limit --limit 1/m --limit-burst 5 -j LOG --log-prefix "tuxfrw: OUTPUT! "

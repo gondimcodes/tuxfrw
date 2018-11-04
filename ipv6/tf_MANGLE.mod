@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# TuxFrw 4.2
-# Copyright (C) 2001-2016 Marcelo Gondim (http://tuxfrw.linuxinfo.com.br/)
+# TuxFrw 4.4
+# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_MANGLE.mod - TuxFrw MANGLE rules module
@@ -31,7 +31,6 @@ $IP6TABLES -t mangle -A PREROUTING -p tcp -m conntrack --ctstate NEW -m tcpmss !
 $IP6TABLES -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
 $IP6TABLES -t mangle -A PREROUTING -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
 $IP6TABLES -t mangle -A PREROUTING -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
-$IP6TABLES -t mangle -A PREROUTING -p tcp --tcp-flags SYN,FIN SYN,FIN -j DROP
 $IP6TABLES -t mangle -A PREROUTING -p tcp --tcp-flags FIN,RST FIN,RST -j DROP
 $IP6TABLES -t mangle -A PREROUTING -p tcp --tcp-flags FIN,ACK FIN -j DROP
 $IP6TABLES -t mangle -A PREROUTING -p tcp --tcp-flags ACK,URG URG -j DROP
@@ -44,10 +43,7 @@ $IP6TABLES -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DRO
 $IP6TABLES -t mangle -A PREROUTING -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP
 
 if [ "$EXT_IFACE" != "" ]; then $IP6TABLES -t mangle -A PREROUTING -m set --match-set bogons_v6 src -i $EXT_IFACE -j DROP; fi
-
-# Block SSDP
-$IP6TABLES -t mangle -A PREROUTING -p udp --sport 1900 -j DROP
-$IP6TABLES -t mangle -A PREROUTING -p udp --dport 1900 -j DROP
+$IP6TABLES -t mangle -A PREROUTING -s ::1 ! -i $LO_IFACE -j DROP
 
 # SPOOF_CHECK packets
 if [ "$EXT_IFACE" != "" -a "$EXT_IP6"  != "" ]; then $IP6TABLES -t mangle -A PREROUTING -s $EXT_IP6  -j DROP; fi
