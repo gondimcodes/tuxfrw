@@ -101,7 +101,7 @@ set_sysctl()
   $SYSCTL net.netfilter.nf_conntrack_tcp_timeout_syn_sent=20 
   $SYSCTL net.netfilter.nf_conntrack_tcp_timeout_time_wait=10 
   $SYSCTL net.ipv4.tcp_slow_start_after_idle=0 
-  $SYSCTL net.ipv4.ip_local_port_range=1024 65000 
+  $SYSCTL net.ipv4.ip_local_port_range="1024 65000" 
   $SYSCTL net.ipv4.ip_no_pmtu_disc=1 
   $SYSCTL net.ipv4.route.flush=1 
   $SYSCTL net.ipv4.route.max_size=8048576 
