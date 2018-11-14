@@ -66,8 +66,7 @@ fi
 
 # accept VPN between this firewall and another (using PPTP)
 if [ "$PPTP_IP" != "" ]; then
-   $IPTABLES -A INPUT -p 47  -s $PPTP_IP -j ACCEPT
-   $IPTABLES -A INPUT -m conntrack --ctstate ESTABLISHED -m helper --helper pptp -s $PPTP_IP -p tcp --dport 1723 -j ACCEPT
+   $IPTABLES -A INPUT -p 47 -s $PPTP_IP -j ACCEPT
 fi
 #==============================================================================
 # Place your rules below

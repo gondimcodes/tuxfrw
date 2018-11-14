@@ -115,7 +115,6 @@ set_sysctl()
   $SYSCTL net.ipv4.tcp_wmem="4096 87380 33554432"
   $SYSCTL net.ipv4.udp_wmem_min=16384 
   $SYSCTL net.ipv4.tcp_max_tw_buckets=1440000 
-  $SYSCTL net.ipv4.tcp_tw_reuse=1 
   $SYSCTL net.ipv4.tcp_max_orphans=400000 
   $SYSCTL net.ipv4.tcp_window_scaling=1 
   $SYSCTL net.ipv4.tcp_rfc1337=1 
@@ -132,7 +131,6 @@ set_sysctl()
   $SYSCTL net.ipv4.tcp_keepalive_intvl=60 
   $SYSCTL net.ipv4.tcp_keepalive_probes=10 
   $SYSCTL net.ipv4.tcp_no_metrics_save=1 
-  $SYSCTL net.ipv4.ip_forward=0 
   $SYSCTL net.ipv4.conf.all.accept_redirects=0 
   $SYSCTL net.ipv4.conf.all.send_redirects=0 
   $SYSCTL net.ipv4.conf.all.accept_source_route=0 

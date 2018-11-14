@@ -91,8 +91,7 @@ fi
 
 # accept VPN between this firewall and another (using PPTP)
 if [ "$PPTP_IP6" != "" ]; then
-   $IP6TABLES -A INPUT -p 47  -s $PPTP_IP6 -j ACCEPT
-   $IP6TABLES -A INPUT -m conntrack --ctstate ESTABLISHED -m helper --helper pptp -s $PPTP_IP6 -p tcp --dport 1723 -j ACCEPT
+   $IP6TABLES -A INPUT -p 47 -s $PPTP_IP6 -j ACCEPT
 fi
 #==============================================================================
 # Place your rules below
