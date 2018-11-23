@@ -40,5 +40,8 @@ if [ "$PPTP_IP6" != "" ]; then
    $IP6TABLES -t raw -A PREROUTING -s $PPTP_IP6 -p tcp -m tcp --dport 1723 -j CT --helper pptp
 fi
 
+# rp_filter
+$IP6TABLES -t raw -A PREROUTING -m rpfilter --invert -j DROP
+
 # helper ftp
 #$IP6TABLES -t raw -A PREROUTING -p tcp --dport 21 -j CT --helper ftp

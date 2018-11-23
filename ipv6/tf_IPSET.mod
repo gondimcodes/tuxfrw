@@ -28,3 +28,4 @@
 # Please create list in tf_BASE.mod
 
 ipset add bogons_v6 2001:db8::/32 comment "BOGONS"
+ipset add bogons_v6 fd00::/8 comment "BOGONS"
