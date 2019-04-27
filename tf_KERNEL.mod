@@ -135,5 +135,6 @@ set_sysctl()
   $SYSCTL net.ipv4.conf.all.send_redirects=0 
   $SYSCTL net.ipv4.conf.all.accept_source_route=0 
   $SYSCTL net.ipv4.conf.all.rp_filter=1
-
+  $SYSCTL net.ipv4.tcp_mtu_probing=1
+  $SYSCTL net.ipv4.tcp_base_mss=1024
 }
