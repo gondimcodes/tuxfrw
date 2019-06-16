@@ -27,5 +27,12 @@
 
 # Please create list in tf_BASE.mod
 
-ipset add bogons_v6 2001:db8::/32 comment "BOGONS"
-ipset add bogons_v6 fc00::/7 comment "BOGONS"
+ipset add bogons_v6 ::/8 comment "BOGONS"
+ipset add bogons_v6 0100::/64 comment "Discard-Only [RFC6666]"
+ipset add bogons_v6 2001:2::/48 comment "BMWG [RFC5180]"
+ipset add bogons_v6 2001:10::/28 comment "ORCHID [RFC4843]"
+ipset add bogons_v6 2001:db8::/32 comment "docu range [RFC3849]"
+ipset add bogons_v6 3ffe::/16 comment "Old 6bone"
+ipset add bogons_v6 fc00::/7 comment "unique local unicast"
+ipset add bogons_v6 fec0::/10 comment "old site local unicast"
+ipset add bogons_v6 ff00::/8 comment "multicast"
