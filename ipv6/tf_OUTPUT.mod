@@ -37,9 +37,6 @@ $IP6TABLES -A OUTPUT -m state --state ESTABLISHED -j ACCEPT
 # accept output packets from LO_IFACE
 $IP6TABLES -A OUTPUT -o $LO_IFACE -j ACCEPT
 
-# accept link local address
-$IP6TABLES -A OUTPUT -d fe80::/10 -j ACCEPT
-
 # accept unmatched OUTPUT packets
 # - To enhance security, comment out this line after tests.
 $IP6TABLES -A OUTPUT -j ACCEPT

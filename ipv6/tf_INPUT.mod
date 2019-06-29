@@ -37,9 +37,6 @@ $IP6TABLES -A INPUT -m state --state ESTABLISHED -j ACCEPT
 # accept input packets from LO_IFACE
 $IP6TABLES -A INPUT -i $LO_IFACE -j ACCEPT
 
-# accept link local address
-$IP6TABLES -A INPUT -s fe80::/10 -j ACCEPT
-
 # accept SSH input from remote administrator IP
 if [ "$RMT_ADMIN_IP6" != "" ]; then
    $IP6TABLES -A INPUT -p tcp -m tcp -s $RMT_ADMIN_IP6 --dport $SSH_PORT -m conntrack --ctstate INVALID,UNTRACKED -j SYNPROXY --sack-perm --timestamp --wscale 7 --mss 1460
