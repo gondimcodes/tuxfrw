@@ -45,3 +45,31 @@ $IP6TABLES -t raw -A PREROUTING -m rpfilter --invert -j DROP
 
 # helper ftp
 #$IP6TABLES -t raw -A PREROUTING -p tcp --dport 21 -j CT --helper ftp
+
+$IP6TABLES -t raw -A PREROUTING -p tcp ! --syn -m conntrack --ctstate NEW -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp -m conntrack --ctstate NEW -m tcpmss ! --mss 536:65535 -j DROP
+
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags FIN,RST FIN,RST -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags FIN,ACK FIN -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags ACK,URG URG -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags ACK,FIN FIN -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags ACK,PSH PSH -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags ALL ALL -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags ALL NONE -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags ALL FIN,PSH,URG -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags ALL SYN,FIN,PSH,URG -j DROP
+$IP6TABLES -t raw -A PREROUTING -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP
+
+if [ "$EXT_IFACE" != "" ]; then $IP6TABLES -t raw -A PREROUTING -m set --match-set bogons_v6 src -i $EXT_IFACE -j DROP; fi
+$IP6TABLES -t raw -A PREROUTING -s ::1 ! -i $LO_IFACE -j DROP
+
+# SPOOF_CHECK packets
+if [ "$EXT_IFACE" != "" -a "$EXT_IP6"  != "" ]; then $IP6TABLES -t raw -A PREROUTING -s $EXT_IP6  -j DROP; fi
+if [ "$EXT_IFACE" != "" -a "$EXT_NET6" != "" ]; then $IP6TABLES -t raw -A PREROUTING -s $EXT_NET6 ! -i $EXT_IFACE -j DROP; fi
+if [ "$INT_IFACE" != "" -a "$INT_IP6"  != "" ]; then $IP6TABLES -t raw -A PREROUTING -s $INT_IP6  -j DROP; fi
+if [ "$INT_IFACE" != "" -a "$INT_NET6" != "" ]; then $IP6TABLES -t raw -A PREROUTING -s $INT_NET6 ! -i $INT_IFACE -j DROP; fi
+if [ "$DMZ_IFACE" != "" -a "$DMZ_IP6"  != "" ]; then $IP6TABLES -t raw -A PREROUTING -s $DMZ_IP6  -j DROP; fi
+if [ "$DMZ_IFACE" != "" -a "$DMZ_NET6" != "" ]; then $IP6TABLES -t raw -A PREROUTING -s $DMZ_NET6 ! -i $DMZ_IFACE -j DROP; fi
