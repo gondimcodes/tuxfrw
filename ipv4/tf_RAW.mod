@@ -60,8 +60,6 @@ $IPTABLES -t raw -A PREROUTING -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DRO
 if [ "$EXT_IFACE" != "" ]; then $IPTABLES -t raw -A PREROUTING -m set --match-set bogons_v4 src -i $EXT_IFACE -j DROP; fi
 $IPTABLES -t raw -A PREROUTING -s 127.0.0.0/8 ! -i $LO_IFACE -j DROP
 
-$IPTABLES -t raw -A PREROUTING -f -j DROP
-
 # SPOOF_CHECK packets
 if [ "$EXT_IFACE" != "" -a "$EXT_IP"  != "" ]; then $IPTABLES -t raw -A PREROUTING -s $EXT_IP  -j DROP; fi
 if [ "$EXT_IFACE" != "" -a "$EXT_BRO" != "" ]; then $IPTABLES -t raw -A PREROUTING -s $EXT_BRO -j DROP; fi
