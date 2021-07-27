@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
 # TuxFrw 4.4
-# Copyright (C) 2001-2018 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
+# Copyright (C) 2001-2021 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tf_DMZ-INT.mod - TuxFrw DMZ->INT rules module
