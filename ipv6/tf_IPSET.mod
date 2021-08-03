@@ -27,7 +27,6 @@
 
 # Please create list in tf_BASE.mod
 
-ipset add bogons_v6 ::/8 comment "BOGONS"
 ipset add bogons_v6 0100::/64 comment "Discard-Only [RFC6666]"
 ipset add bogons_v6 2001:2::/48 comment "BMWG [RFC5180]"
 ipset add bogons_v6 2001:10::/28 comment "ORCHID [RFC4843]"
