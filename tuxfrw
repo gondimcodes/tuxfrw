@@ -2,7 +2,7 @@
 #
 # ----------------------------------------------------------------------------
 # TuxFrw 4.4
-# Copyright (C) 2001-2021 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
+# Copyright (C) 2001-2022 Marcelo Gondim (https://tuxfrw.linuxinfo.com.br/)
 # ----------------------------------------------------------------------------
 #
 # tuxfrw - startup script for the TuxFrw firewall automation tool
@@ -262,7 +262,7 @@ panic() {
 header() {
   echo "========================================================================="
   echo "=== TuxFrw 4.4                                                        ==="
-  echo "=== Copyright (C) 2001-2021                                           ===" 
+  echo "=== Copyright (C) 2001-2022                                           ===" 
   echo "=== Marcelo Gondim <gondim@linuxinfo.com.br>                          ===" 
   echo "+-----------------------------------------------------------------------+"
   echo "| TuxFrw is free software; you can redistribute it and/or modify        |"
