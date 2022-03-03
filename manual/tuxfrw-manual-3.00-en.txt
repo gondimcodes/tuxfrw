@@ -235,7 +235,7 @@ In case of error occurrence when initiating TuxFrw, as the example below:
 =========================================================================
 === TuxFrw 3.00                                                       ===
 === Copyright (C) 2001-2010                                           ===
-=== Marcelo Gondim <gondim@linuxinfo.com.br>                          ===
+=== Marcelo Gondim <gondim@gmail.com>                          ===
 +-----------------------------------------------------------------------+
 | TuxFrw is free software; you can redistribute it and/or modify        |
 | it under the terms of the GNU General Public License as published by  |
@@ -525,7 +525,7 @@ Ok! Now you just have to restart the TuxFrw for the new rules to work.
 
  Autor
  -----
- - Marcelo Gondim <gondim@linuxinfo.com.br>
+ - Marcelo Gondim <gondim@gmail.com>
 
 ================================================================================
 

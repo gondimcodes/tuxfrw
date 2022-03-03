@@ -263,7 +263,7 @@ header() {
   echo "========================================================================="
   echo "=== TuxFrw 4.4                                                        ==="
   echo "=== Copyright (C) 2001-2022                                           ===" 
-  echo "=== Marcelo Gondim <gondim@linuxinfo.com.br>                          ===" 
+  echo "=== Marcelo Gondim <gondim@gmail.com>                                 ===" 
   echo "+-----------------------------------------------------------------------+"
   echo "| TuxFrw is free software; you can redistribute it and/or modify        |"
   echo "| it under the terms of the GNU General Public License as published by  |"
